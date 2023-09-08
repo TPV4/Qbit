@@ -1,4 +1,5 @@
 Pierwsza wersja kalkulatora obwodów kwantowych.
+może nie działać na macu
 na razie tylko operacje na pojedynczych qbitach
 
 sqrt(x) - pierwiastek z x
