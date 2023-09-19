@@ -3,7 +3,8 @@ import tkinter as tk
 from tkinter.ttk import *
 import operacje as op
 from functools import partial
-from sympy import *
+# from sympy import *
+from cmath import sqrt
 
 #funkcje
 def dodaj_obwod(i:int):
@@ -19,6 +20,11 @@ def dodaj_obwod(i:int):
     paski.append(tk.Frame(okno, height=70, width=700, bg=""))
     paskowanie(i)
     paski[i].place(x=62, y=i*100+43)
+    if len(paski)>1:
+        global paski_splatujace
+        paski_splatujace.append(tk.Frame(okno, height=70, width=700, bg=""))
+        paskowanie_splatujace(i-1)
+        paski_splatujace[i-1].place(x=62, y=i*100-10)
 
 def usun_obwod(i:int):
     global linie
@@ -36,18 +42,38 @@ def usun_obwod(i:int):
     paski.pop(i)
     global bramki
     del bramki[i]
+    if i>0:
+        global paski_splatujace
+        paski_splatujace[i-1].destroy()
+        paski_splatujace.pop(i-1)
+        global bramki_splatujace
+        del bramki_splatujace[i-1]
     global obwod
     obwod.pop(i)
+    if i!=0:
+        for n in range(len(obwod[i-1])):
+            if len(obwod[i-1][n])==4:
+                obwod[i-1][n]=op.I
     global macierz
     macierz=op.skladanie(obwod)
     wypisanie()
-
+    
 def stawianie(opcja:str):
     global bramki
+    global obwod
     for i in range(len(bramki)):
         for j in range(10):
             if type(bramki[i][j])==tk.Button:
                 bramki[i][j].config(state=tk.NORMAL, command=partial(bramkowanie, opcja, i, j))
+
+def stawianie_splatujace(opcja:str):
+    global obwod
+    global bramki_splatujace
+    for i in range(len(bramki_splatujace)):
+        for j in range(5):
+            if type(bramki_splatujace[i][j])==tk.Button:
+                if obwod[i][2*j]==op.I and obwod[i+1][2*j]==op.I and obwod[i][2*j+1]==op.I and obwod[i+1][2*j+1]==op.I:
+                    bramki_splatujace[i][j].config(state=tk.NORMAL, command=partial(bramkowanie_splatujace, opcja, i, j))
 
 def paskowanie(i:int):
     global bramki
@@ -62,6 +88,14 @@ def paskowanie(i:int):
     macierz=op.skladanie(obwod)
     wypisanie()
     
+def paskowanie_splatujace(i:int):
+    global bramki_splatujace
+    bramki_splatujace.append([])
+    global paski_splatujace
+    for n in range(5):
+        bramki_splatujace[i].append(tk.Button(paski_splatujace[i], bg='orange', activebackground='orange', relief=tk.FLAT, state=tk.DISABLED))
+        bramki_splatujace[i][n].place(x=n*140+30, rely=0.52, anchor="center", width=10, height=10)
+
 def bramkowanie(opcja:str, i:int, n:int):
     global bramki
     bramki[i][n].destroy()
@@ -82,6 +116,25 @@ def bramkowanie(opcja:str, i:int, n:int):
     macierz=op.skladanie(obwod)
     wypisanie()
 
+def bramkowanie_splatujace(opcja:str, i:int, n:int):
+    global bramki_splatujace
+    bramki_splatujace[i][n].destroy()
+    bramki_splatujace[i][n]=tk.Label(paski_splatujace[i], text=opcja)
+    bramki_splatujace[i][n].place(x=n*140+68, rely=0.52, anchor="center", height=40, width=100)
+    global obwod
+    if opcja=='pSWAP':
+        obwod[i][2*n]=op.pSWAP
+        obwod[i][2*n+1]=op.pSWAP2
+        obwod[i+1][2*n]=op.pSWAP2
+        obwod[i+1][2*n+1]=op.pSWAP2
+    elif opcja=='SWAP':
+        obwod[i][2*n]=op.SWAP
+        obwod[i][2*n+1]=op.pSWAP2
+        obwod[i+1][2*n]=op.pSWAP2
+        obwod[i+1][2*n+1]=op.pSWAP2
+    global macierz
+    macierz=op.skladanie(obwod)
+    wypisanie()
     
 def wypisanie():
     global wynik
@@ -100,7 +153,7 @@ def wypisanie():
 if __name__=="__main__":
     okno=tk.Tk()
     okno.geometry("1200x600")
-    okno.resizable(False, True)
+    okno.resizable(True, True)
     okno.title("Qbit")
     tlo=tk.Canvas(okno, width=700, height=700, bg="black")
     tlo.place(x=60, y=0)
@@ -114,10 +167,12 @@ if __name__=="__main__":
 
     #obwod
     bramki=[]
+    bramki_splatujace=[]
     paski=[]
+    paski_splatujace=[]
     obwod=[]
     macierz=[[]]
-    wynik=tk.Canvas(okno, height=500, width=430, bg='grey')
+    wynik=tk.Canvas(okno, height=1000, width=1000, bg='grey')
     wynik.place(x=770, y=30)
     wypisanie()
 
@@ -136,6 +191,10 @@ if __name__=="__main__":
     Z.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     S.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     H.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    pSWAP=Button(toolbar, text='sqrt(SWAP)', command=partial(stawianie_splatujace, 'pSWAP'))
+    pSWAP.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    SWAP=Button(toolbar, text='SWAP', command=partial(stawianie_splatujace, 'SWAP'))
+    SWAP.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
 
     #petla glowna
     okno.mainloop()
