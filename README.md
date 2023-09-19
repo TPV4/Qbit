@@ -1,8 +1,8 @@
-Pierwsza wersja kalkulatora obwodów kwantowych.
+prototypowa wersja kalkulatora obwodów kwantowych.
 może nie działać na macu
-na razie tylko operacje na pojedynczych qbitach
 
-sqrt(x) - pierwiastek z x
-j - jednostka urojona (complex number "i")
-python zapisuje liczby zespolone w postaci a+bj
-wiec jak część urojona się skróci zostaje 1+0j
+cmath podaje zaokraglone wartosci pierwiastka z 2 jako 0,71
+jednostka urojona w pythonie to j i tak tez jest w tym programie
+
+operacje na pojedynczych qbitach mozna stawiac na czerwonych polach
+pomaranczowe pola sa na bramki splatujace.
