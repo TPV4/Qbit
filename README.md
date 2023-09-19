@@ -6,3 +6,5 @@ jednostka urojona w pythonie to j i tak tez jest w tym programie
 
 operacje na pojedynczych qbitach mozna stawiac na czerwonych polach
 pomaranczowe pola sa na bramki splatujace.
+
+w folderze dist jest program w formacie exe
