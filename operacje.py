@@ -1,7 +1,7 @@
 
 # from math import *
 # from sympy import *
-from cmath import sqrt
+from cmath import sqrt, cos, sin, exp, pi
 # import numpy as np
 
 def mnozenie(A:list, B:list)->list:
@@ -80,9 +80,26 @@ H=[[sqrt(2)/2,sqrt(2)/2],
 S=[[1,0],
    [0,1j]]
 
+SX=[[(1+1j)/2,(1-1j)/2],
+    [(1-1j)/2,(1+1j)/2]]
+
+Rx=[[cos(pi/4), -1j*sin(pi/4)],
+    [-1j*sin(pi/4), cos(pi/4)]]
+
+Ry=[[cos(pi/4), -sin(pi/4)],
+    [sin(pi/4), cos(pi/4)]]
+
+Rz=[[exp(-1j*pi/4), 0],
+    [0, exp(1j*pi/4)]]
+
 SWAP=[[1,0,0,0],
       [0,0,1,0],
       [0,1,0,0],
+      [0,0,0,1]]
+
+iSWAP=[[1,0,0,0],
+      [0,0,1j,0],
+      [0,1j,0,0],
       [0,0,0,1]]
 
 pSWAP=[[sqrt(2)/2,0,0,sqrt(2)/2],
@@ -92,6 +109,15 @@ pSWAP=[[sqrt(2)/2,0,0,sqrt(2)/2],
 
 pSWAP2=[[1,0],[0,1]]
 
+CNOT=[[1,0,0,0],
+      [0,1,0,0],
+      [0,0,0,1],
+      [0,0,1,0]]
+
+rCNOT=[[1,0,0,0],
+      [0,0,0,1],
+      [0,0,1,0],
+      [0,1,0,0]]
 # pSWAP1=[[sqrt(2)/2,0],
 #         [0,(1-1j)/2]]
 # pSWAP2=[[0,sqrt(2)/2],
@@ -101,6 +127,8 @@ pSWAP2=[[1,0],[0,1]]
 # pSWAP4=[[(1-1j)/2,0],
 #         [0,-sqrt(2)/2]]
 
-CNOT=mnozenie(iloczyn_tensorowy(I,H),mnozenie(pSWAP, mnozenie(iloczyn_tensorowy(X,X),mnozenie(pSWAP,iloczyn_tensorowy(I,H)))))
+
+
+# CNOT=mnozenie(iloczyn_tensorowy(I,H),mnozenie(pSWAP, mnozenie(iloczyn_tensorowy(X,X),mnozenie(pSWAP,iloczyn_tensorowy(I,H)))))
 
 # print(CNOT)

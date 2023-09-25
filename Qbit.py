@@ -5,6 +5,7 @@ import operacje as op
 from functools import partial
 # from sympy import *
 from cmath import sqrt
+from math import log2
 
 #funkcje
 def dodaj_obwod(i:int):
@@ -112,6 +113,14 @@ def bramkowanie(opcja:str, i:int, n:int):
         obwod[i][n]=op.H
     elif opcja=='S':
         obwod[i][n]=op.S
+    elif opcja=='SX':
+        obwod[i][n]=op.SX
+    elif opcja=='Rx':
+        obwod[i][n]=op.Rx
+    elif opcja=='Ry':
+        obwod[i][n]=op.Ry
+    elif opcja=='Rz':
+        obwod[i][n]=op.Rz
     global macierz
     macierz=op.skladanie(obwod)
     wypisanie()
@@ -124,14 +133,17 @@ def bramkowanie_splatujace(opcja:str, i:int, n:int):
     global obwod
     if opcja=='pSWAP':
         obwod[i][2*n]=op.pSWAP
-        obwod[i][2*n+1]=op.pSWAP2
-        obwod[i+1][2*n]=op.pSWAP2
-        obwod[i+1][2*n+1]=op.pSWAP2
     elif opcja=='SWAP':
         obwod[i][2*n]=op.SWAP
-        obwod[i][2*n+1]=op.pSWAP2
-        obwod[i+1][2*n]=op.pSWAP2
-        obwod[i+1][2*n+1]=op.pSWAP2
+    elif opcja=='iSWAP':
+        obwod[i][2*n]=op.iSWAP
+    elif opcja=='CNOT':
+        obwod[i][2*n]=op.CNOT
+    elif opcja=='rCNOT':
+        obwod[i][2*n]=op.rCNOT
+    obwod[i][2*n+1]=op.pSWAP2
+    obwod[i+1][2*n]=op.pSWAP2
+    obwod[i+1][2*n+1]=op.pSWAP2
     global macierz
     macierz=op.skladanie(obwod)
     wypisanie()
@@ -141,18 +153,39 @@ def wypisanie():
     global macierz
     wynik.delete("all")
     n=len(macierz)
-    wynik.create_line(20, 10, 10, 10, 10, 60*n+10, 20, 60*n+10)
-    wynik.create_line(60*n, 10, 60*n+10, 10, 60*n+10, 60*n+10, 60*n, 60*n+10)
+    wynik.create_line(20, 10, 10, 10, 10, 40*n+10, 20, 40*n+10)
+    wynik.create_line(40*n, 10, 40*n+10, 10, 40*n+10, 40*n+10, 40*n, 40*n+10)
     for i in range(len(macierz)):
         for j in range(len(macierz[i])):
-            napis=str(macierz[i][j])
-            wynik.create_text(60*j+40, 60*i+30, anchor='center', text=napis)
+            # napis=str(macierz[i][j])
+            #
+            if abs(macierz[i][j])==0:
+                napis="-"
+            else:
+                # napis="".join(['0' for n in range(len(macierz)-i)])
+                # napis=napis[:-1]
+                # napis='{0:b}'.format(i)
+                napis=str(macierz[i][j])
+            #
+            wynik.create_text(40*j+40, 40*i+30, anchor='center', text=napis)
+        wektor='|'
+        # a=['0' for n in range(int(log2(len(macierz))))]
+        # if i%2==1:
+        #     a[i]='1'
+        a=str('{0:b}'.format(i))
+        b=int(log2(len(macierz)))-len(a)
+        if b!=0:
+            c=['0' for n in range(b)]
+            wektor+=''.join(c)
+        wektor+=a
+        wektor+='>'
+        wynik.create_text(40*len(macierz)+40, 40*i+30, anchor='center', text=wektor)
         
 
 #main
 if __name__=="__main__":
     okno=tk.Tk()
-    okno.geometry("1200x600")
+    okno.geometry("1500x600")
     okno.resizable(True, True)
     okno.title("Qbit")
     tlo=tk.Canvas(okno, width=700, height=700, bg="black")
@@ -173,7 +206,7 @@ if __name__=="__main__":
     obwod=[]
     macierz=[[]]
     wynik=tk.Canvas(okno, height=1000, width=1000, bg='grey')
-    wynik.place(x=770, y=30)
+    wynik.place(x=770, y=0)
     wypisanie()
 
 
@@ -186,15 +219,29 @@ if __name__=="__main__":
     Z=Button(toolbar, text='Z', command=partial(stawianie, 'Z'))
     S=Button(toolbar, text='S', command=partial(stawianie, 'S'))
     H=Button(toolbar, text='H', command=partial(stawianie, 'H'))
+    SX=Button(toolbar, text='SX', command=partial(stawianie, 'SX'))
+    Rx=Button(toolbar, text='Rx', command=partial(stawianie, 'Rx'))
+    Ry=Button(toolbar, text='Ry', command=partial(stawianie, 'Ry'))
+    Rz=Button(toolbar, text='Rz', command=partial(stawianie, 'Rz'))
     X.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     Y.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     Z.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     S.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     H.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    SX.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    Rx.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    Ry.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    Rz.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     pSWAP=Button(toolbar, text='sqrt(SWAP)', command=partial(stawianie_splatujace, 'pSWAP'))
     pSWAP.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     SWAP=Button(toolbar, text='SWAP', command=partial(stawianie_splatujace, 'SWAP'))
     SWAP.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    iSWAP=Button(toolbar, text='iSWAP', command=partial(stawianie_splatujace, 'iSWAP'))
+    iSWAP.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    CNOT=Button(toolbar, text='CNOT', command=partial(stawianie_splatujace, 'CNOT'))
+    CNOT.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    rCNOT=Button(toolbar, text='rCNOT', command=partial(stawianie_splatujace, 'rCNOT'))
+    rCNOT.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
 
     #petla glowna
     okno.mainloop()
