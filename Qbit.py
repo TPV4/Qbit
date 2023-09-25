@@ -141,6 +141,12 @@ def bramkowanie_splatujace(opcja:str, i:int, n:int):
         obwod[i][2*n]=op.CNOT
     elif opcja=='rCNOT':
         obwod[i][2*n]=op.rCNOT
+    elif opcja=='Rxx':
+        obwod[i][2*n]=op.Rxx
+    elif opcja=='Ryy':
+        obwod[i][2*n]=op.Ryy
+    elif opcja=='Rzz':
+        obwod[i][2*n]=op.Rzz
     obwod[i][2*n+1]=op.pSWAP2
     obwod[i+1][2*n]=op.pSWAP2
     obwod[i+1][2*n+1]=op.pSWAP2
@@ -242,6 +248,12 @@ if __name__=="__main__":
     CNOT.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
     rCNOT=Button(toolbar, text='rCNOT', command=partial(stawianie_splatujace, 'rCNOT'))
     rCNOT.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    # Rxx=Button(toolbar, text='Rxx', command=partial(stawianie_splatujace, 'Rxx'))
+    # Rxx.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    # Ryy=Button(toolbar, text='Ryy', command=partial(stawianie_splatujace, 'Ryy'))
+    # Ryy.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
+    # Rzz=Button(toolbar, text='Rzz', command=partial(stawianie_splatujace, 'Rzz'))
+    # Rzz.pack(side = tk.LEFT, expand = True, fill = tk.BOTH)
 
     #petla glowna
     okno.mainloop()

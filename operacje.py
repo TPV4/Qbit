@@ -92,6 +92,21 @@ Ry=[[cos(pi/4), -sin(pi/4)],
 Rz=[[exp(-1j*pi/4), 0],
     [0, exp(1j*pi/4)]]
 
+Rxx=[[cos(pi/2), 0, 0, -1j*sin(pi/2)],
+    [0, cos(pi/2), -1j*sin(pi/2), 0],
+    [0,-1j*sin(pi/2),cos(pi/2),0],
+    [-1j*sin(pi/2),0,0,cos(pi/2)]]
+
+Ryy=[[cos(pi/2), 0, 0, 1j*sin(pi/2)],
+    [0, cos(pi/2), -1j*sin(pi/2), 0],
+    [0,-1j*sin(pi/2),cos(pi/2),0],
+    [1j*sin(pi/2),0,0,cos(pi/2)]]
+
+Rzz=[[exp(-1j*pi/4), 0, 0, 0],
+    [0, exp(1j*pi/4), 0, 0],
+    [0, 0, exp(1j*pi/4), 0],
+    [0, 0, 0, exp(-1j*pi/4)]]
+
 SWAP=[[1,0,0,0],
       [0,0,1,0],
       [0,1,0,0],
